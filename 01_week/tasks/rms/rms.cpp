@@ -5,7 +5,7 @@
 double CalculateRMS(double values[], size_t size) {
 
     // в случае пустовго массива возращаем 0.0
-    if (size == 0) {
+    if (size == 0 || values == nullptr) {
         return 0.0;
     }
 
