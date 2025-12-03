@@ -1,27 +1,3 @@
- |
-        
-          # Проверяем, есть ли предыдущий коммит
-          if git rev-parse HEAD~1 > /dev/null 2>&1; then
-            changed_files=$(git diff --name-only HEAD~1 HEAD)
-          else
-            changed_files=$(git ls-files)
-          fi
-          
-          echo "Changed files:"
-          echo "$changed_files"
-          
-<<<<<<< HEAD
-          tasks=("addition" "print_bits" "check_flags" "length_lit" "quadratic"  "rms" "char_changer")
-=======
-          tasks=("addition" "rms" "print_bits" "check_flags" "length_lit" "quadratic" "char_changer"
-                 "swap_ptr" "func_array" "longest" "last_of_us" "little_big" "pretty_array")
-          
-          declare -i passed_count=0
-          declare -i failed_count=0
-          declare -i task_count=0
-          
-          echo "=== Starting tests for changed tasks ==="
->>>>>>> main
 name: Testing Tasks
 
 on: [push, pull_request]
@@ -40,6 +16,25 @@ jobs:
 
       - name: Build and run tests for changed tasks
         run: |
+        
+          # Проверяем, есть ли предыдущий коммит
+          if git rev-parse HEAD~1 > /dev/null 2>&1; then
+            changed_files=$(git diff --name-only HEAD~1 HEAD)
+          else
+            changed_files=$(git ls-files)
+          fi
+          
+          echo "Changed files:"
+          echo "$changed_files"
+          
+          tasks=("addition" "rms" "print_bits" "check_flags" "length_lit" "quadratic" "char_changer"
+                 "swap_ptr" "func_array" "longest" "last_of_us" "little_big" "pretty_array")
+          
+          declare -i passed_count=0
+          declare -i failed_count=0
+          declare -i task_count=0
+          
+          echo "=== Starting tests for changed tasks ==="
           
           for task in "${tasks[@]}"; do
             if echo "$changed_files" | grep -q "tasks/$task/"; then
@@ -62,8 +57,6 @@ jobs:
               fi
             fi
           done
-<<<<<<< HEAD
-=======
           
           echo "=== Test Results Summary ==="
           echo "Total tasks in list: ${#tasks[@]}"
@@ -81,4 +74,3 @@ jobs:
             echo "✅ All processed tasks passed!"
             exit 0
           fi
->>>>>>> main
