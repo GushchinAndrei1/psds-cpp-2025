@@ -7,10 +7,31 @@
 
 template <typename T> // параметр-тип
 void SwapPtr(T*& a, T*& b) {
-    T* ptr = a; // сохраняем адрес из a
+    T* tmp = a; // сохраняем адрес из a
     a = b; // кладём в a адрес из b
-    b = ptr; // в b кладём старый адрес a
+    b = tmp; // в b кладём старый адрес a
 }
+
+// версия без использования парметр-тип:
+/* void SwapPtr(int*& a, int*& b) {
+    int* tmp = a;
+    a = b;
+    b = tmp;
+}
+
+void SwapPtr(const int*& a, const int*& b) {
+    const int* tmp = a;
+    a = b;
+    b = tmp;
+}
+
+void SwapPtr(int**& a, int**& b) {
+    int** tmp = a;
+    a = b;
+    b = tmp;
+}
+*/
+
 
 
 // это для визуальной проверки
