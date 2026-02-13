@@ -293,7 +293,8 @@ TEST(StringViewTest, MemorySafety) {
     EXPECT_TRUE(sv1.Empty());
     EXPECT_EQ(sv1.ToString(), "");
 
-    StringView sv2(std::string("Temporary"));
+    std::string temp("Temporary");
+    StringView sv2(temp);
     EXPECT_EQ(sv2.ToString(), "Temporary");
 
     StringView sv3("Hello, World!");
