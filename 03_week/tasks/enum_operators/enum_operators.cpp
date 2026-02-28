@@ -12,22 +12,82 @@ enum class CheckFlags : uint8_t {
     ALL = TIME | DATE | USER | CERT | KEYS | DEST
 };
 
-/* return_type */ operator|(/* args */) {
-    throw std::runtime_error{"Not implemented"};
+static constexpr uint8_t flags_bits(CheckFlags flags) {
+    return static_cast<uint8_t>(flags);
 }
 
-/* return_type */ operator&(/* args */) {
-    throw std::runtime_error{"Not implemented"};
+static constexpr uint8_t VALID_FLAGS = flags_bits(CheckFlags::ALL);
+
+CheckFlags operator|(CheckFlags left, CheckFlags right) {
+    return static_cast<CheckFlags>(
+        (flags_bits(left) | flags_bits(right)) & VALID_FLAGS
+    );
 }
 
-/* return_type */ operator^(/* args */) {
-    throw std::runtime_error{"Not implemented"};
+bool operator&(CheckFlags left, CheckFlags right) {
+    uint8_t left_flags  = flags_bits(left)  & VALID_FLAGS;
+    uint8_t right_flags = flags_bits(right) & VALID_FLAGS;
+
+    return left_flags && right_flags &&
+           ((left_flags & right_flags) == left_flags ||
+            (left_flags & right_flags) == right_flags);
 }
 
-/* return_type */ operator~(/* args */) {
-    throw std::runtime_error{"Not implemented"};
+CheckFlags operator^(CheckFlags left, CheckFlags right) {
+    return static_cast<CheckFlags>(
+        (flags_bits(left) ^ flags_bits(right)) & VALID_FLAGS
+    );
 }
 
-/* return_type */ operator<<(/* args */) {
-    throw std::runtime_error{"Not implemented"};
+CheckFlags operator~(CheckFlags flags) {
+    return static_cast<CheckFlags>(
+        (~flags_bits(flags)) & VALID_FLAGS
+    );
+}
+
+std::ostream& operator<<(std::ostream& output, CheckFlags flags) {
+    uint8_t active_flags = flags_bits(flags) & VALID_FLAGS;
+
+    if (active_flags == 0) {
+        output << "NONE";
+        return output;
+    }
+
+    bool add_separator = false;
+
+    if (active_flags & flags_bits(CheckFlags::TIME)) {
+        output << "TIME";
+        add_separator = true;
+    }
+
+    if (active_flags & flags_bits(CheckFlags::DATE)) {
+        if (add_separator) output << ", ";
+        output << "DATE";
+        add_separator = true;
+    }
+
+    if (active_flags & flags_bits(CheckFlags::USER)) {
+        if (add_separator) output << ", ";
+        output << "USER";
+        add_separator = true;
+    }
+
+    if (active_flags & flags_bits(CheckFlags::CERT)) {
+        if (add_separator) output << ", ";
+        output << "CERT";
+        add_separator = true;
+    }
+
+    if (active_flags & flags_bits(CheckFlags::KEYS)) {
+        if (add_separator) output << ", ";
+        output << "KEYS";
+        add_separator = true;
+    }
+
+    if (active_flags & flags_bits(CheckFlags::DEST)) {
+        if (add_separator) output << ", ";
+        output << "DEST";
+    }
+
+    return output;
 }
